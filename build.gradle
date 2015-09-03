@@ -41,3 +41,7 @@ dependencies {
 run {
     systemProperty 'hsleiden.module', 'iad1'
 }
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0'
+}
