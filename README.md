@@ -18,4 +18,4 @@ Install Gradle and ensure it is available on your command line.
 
 # License
 
-TBD
+GNU GPL. See `LICENSE.txt` in the project root.
