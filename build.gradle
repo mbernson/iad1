@@ -11,6 +11,7 @@
 apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'idea'
+apply plugin: 'pmd'
 
 sourceCompatibility = '1.8'
 
@@ -44,4 +45,15 @@ run {
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.0'
+}
+
+pmd {
+    ignoreFailures = true
+}
+
+tasks.withType(Pmd) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
 }
