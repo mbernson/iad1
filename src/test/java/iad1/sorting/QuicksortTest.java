@@ -20,8 +20,7 @@ public class QuicksortTest {
 
         sorter = new Quicksort<>(items);
 
-//        assertArrayEquals(sorted, sorter.sort());
-        assertEquals("Mathijs", "Mathijs");
+        assertArrayEquals(sorted, sorter.sort());
     }
 
     @After
