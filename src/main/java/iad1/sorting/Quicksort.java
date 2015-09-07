@@ -8,6 +8,18 @@ public class Quicksort<T extends Comparable> {
     }
 
     public T[] sort() {
+        return quicksort(items);
+    }
+
+    private T[] quicksort(T[] items) {
+        if(items.length <= 1) {
+            return items;
+        }
+
         return items;
+    }
+
+    private T[] slice(T[] items) {
+        return null;
     }
 }
