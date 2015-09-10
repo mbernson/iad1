@@ -1,12 +1,11 @@
 package iad1.sorting;
 
-public class Quicksort<T extends Comparable<? super T>> implements Sorter {
-    @Override
-    public Comparable[] sort(Comparable[] list) {
+public class Quicksort<T extends Comparable<? super T>> implements Sorter<T> {
+    public T[] sort(T[] list) {
         return sort(list, 0, list.length - 1);
     }
 
-    private Comparable[] sort(Comparable[] list, int low, int high) {
+    private T[] sort(T[] list, int low, int high) {
         if(low < high) {
             final int pivot_location = partition(list, low, high);
             sort(list, low, pivot_location - 1);
@@ -15,8 +14,8 @@ public class Quicksort<T extends Comparable<? super T>> implements Sorter {
         return list;
     }
 
-    private int partition(Comparable[] list, int low, int high) {
-        final Comparable pivot = list[low];
+    private int partition(T[] list, int low, int high) {
+        final T pivot = list[low];
         int leftWall = low;
 
         for (int i = low + 1; i <= high; i++) {
