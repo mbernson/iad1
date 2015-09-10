@@ -37,14 +37,22 @@ dependencies {
     // testCompile dependency to testCompile 'org.testng:testng:6.8.1' and add
     // 'test.useTestNG()' to your build script.
     testCompile 'junit:junit:4.12'
+
+    testCompile "org.mockito:mockito-core:1.+"
 }
 
 run {
     systemProperty 'hsleiden.module', 'iad1'
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.0'
+test {
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: " + descriptor)
+    }
+
+    onOutput { descriptor, event ->
+        logger.lifecycle("Test: " + descriptor + " produced standard out/err: " + event.message )
+    }
 }
 
 pmd {
