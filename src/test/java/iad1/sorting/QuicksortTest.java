@@ -6,20 +6,12 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class QuicksortTest {
+public class QuicksortTest extends SortableTestCase {
 
+    @Override
     @Before
     public void setUp() throws Exception {
-
+        sorter = new Quicksort<>();
     }
 
-    @After
-    public void tearDown() throws Exception {
-        assertTrue(true);
-    }
-
-    @Test
-    public void testSort() throws Exception {
-
-    }
 }
