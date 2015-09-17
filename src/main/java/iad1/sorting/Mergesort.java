@@ -18,33 +18,35 @@ public class Mergesort<T extends Comparable<? super T>> implements Sorter<T> {
         if(hi <= lo)
             return;
 
-        final int mid = lo + (hi - lo) / 2;
+        int mid = lo + (hi - lo) / 2;
+        
         sort(source, lo, mid);
         sort(source, mid + 1, hi);
         merge(source, lo, mid, hi);
     }
 
     private void merge(T[] source, final int lo, final int mid, final int hi) {
-        copy(source, buffer);
-        int firstCounter = lo,
-            secondCounter = mid + 1;
+        copy(source, lo, hi);
+
+        int x = lo,
+            y = mid + 1;
 
         for (int index = lo; index <= hi; index++) {
-            if(firstCounter > mid) {
-                source[index] = buffer[secondCounter++];
-            } else if(secondCounter > hi) {
-                source[index] = buffer[firstCounter++];
-            } else if(buffer[secondCounter].compareTo(buffer[firstCounter]) < 0) {
-                source[index] = buffer[secondCounter++];
+            if(x > mid) {
+                source[index] = buffer[y++];
+            } else if(y > hi) {
+                source[index] = buffer[x++];
+            } else if(buffer[y].compareTo(buffer[x]) < 0) {
+                source[index] = buffer[y++];
             } else {
-                source[index] = buffer[firstCounter++];
+                source[index] = buffer[x++];
             }
         }
     }
 
-    private void copy(T[] source, T[] target) {
-        for (int i = 0; i < source.length; i++) {
-            target[i] = source[i];
+    private void copy(T[] source, int begin, int end) {
+        for (int i = begin; i < end; i++) {
+            buffer[i] = source[i];
         }
     }
 
