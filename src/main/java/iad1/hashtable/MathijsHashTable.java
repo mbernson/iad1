@@ -17,7 +17,6 @@ public class MathijsHashTable<K, V> implements HashTable<K, V> {
 
         if(null == bucket)
             return null;
-//            throw new RuntimeException(String.format("No such key [%s] for hash [%d]\n", key.toString(), hash));
 
         K otherKey = bucket.getKey();
         V ret = bucket.getValue();
@@ -33,7 +32,6 @@ public class MathijsHashTable<K, V> implements HashTable<K, V> {
                 bucket = bucket.getNext();
             } else {
                 return null;
-//                throw new RuntimeException(String.format("No such key [%s] for hash [%d]\n", key.toString(), hash));
             }
         }
     }
@@ -84,7 +82,10 @@ public class MathijsHashTable<K, V> implements HashTable<K, V> {
         }
 
         public void setNext(HashEntry<K,V> next) {
-            this.next = next;
+            if(null == this.next)
+                this.next = next;
+            else
+                this.next.setNext(next);
         }
 
         public HashEntry<K, V> getNext() {
