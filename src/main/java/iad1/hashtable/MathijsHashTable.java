@@ -1,8 +1,10 @@
 package iad1.hashtable;
 
 public class MathijsHashTable<K, V> implements HashTable<K, V> {
+
     private HashEntry[] buckets;
-    private int TABLE_SIZE = 128;
+
+    private int TABLE_SIZE = 100;
 
     public MathijsHashTable() {
         buckets = new HashEntry[TABLE_SIZE];
@@ -10,30 +12,26 @@ public class MathijsHashTable<K, V> implements HashTable<K, V> {
 
     @Override
     public V get(K key) {
-        System.out.printf("Get %s with hashcode %d\n", key.toString(), hash(key));
         final int hash = hash(key);
 
         HashEntry<K, V> bucket = buckets[hash];
+        V something = null;
 
-        if(null == bucket)
-            return null;
+        if(null != bucket) {
+            K otherKey = bucket.getKey();
+            something = bucket.getValue();
 
-        K otherKey = bucket.getKey();
-        V ret = bucket.getValue();
-
-        while(true) {
-            if(key.equals(otherKey)) {
-                return ret;
-            }
-            otherKey = bucket.getKey();
-            ret = bucket.getValue();
-
-            if(bucket.hasNext()) {
+            while (! key.equals(otherKey) && bucket != null) {
+                otherKey = bucket.getKey();
+                something = bucket.getValue();
                 bucket = bucket.getNext();
-            } else {
-                return null;
+
+                if(bucket == null) {
+                    something = null;
+                }
             }
         }
+        return something;
     }
 
     @Override
@@ -48,17 +46,17 @@ public class MathijsHashTable<K, V> implements HashTable<K, V> {
         } else {
             bucket.setNext(entry);
         }
+
         return value;
     }
 
     private int hash(K key) {
-        int hashCode = key.hashCode();
+        final String hashCodeString = String.valueOf(Math.abs((long) key.hashCode()));
+        int hash = hashCodeString.charAt(0);
 
-        char digit = String.valueOf(Math.abs((long) hashCode)).charAt(0);
-        int hash = digit - 47;
-
-        if(hash < 0 || hash > buckets.length - 1)
+        if(hash < 0 || hash > buckets.length - 1) {
             throw new RuntimeException(String.format("Hash code [%d] exceeds the bounds [%d] of the buckets array!", hash, buckets.length));
+        }
 
         return hash;
     }
@@ -82,10 +80,11 @@ public class MathijsHashTable<K, V> implements HashTable<K, V> {
         }
 
         public void setNext(HashEntry<K,V> next) {
-            if(null == this.next)
+            if(null == this.next) {
                 this.next = next;
-            else
+            } else {
                 this.next.setNext(next);
+            }
         }
 
         public HashEntry<K, V> getNext() {
