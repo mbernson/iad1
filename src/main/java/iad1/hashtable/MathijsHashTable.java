@@ -2,69 +2,105 @@ package iad1.hashtable;
 
 public class MathijsHashTable<K, V> implements HashTable<K, V> {
 
-    private HashEntry[] buckets;
+    private HashEntry<K, V>[] buckets;
 
-    private int TABLE_SIZE = 100;
+    private int TABLE_SIZE = 64;
 
     public MathijsHashTable() {
         buckets = new HashEntry[TABLE_SIZE];
     }
 
-    @Override
-    public V get(K key) {
+    private HashEntry<K, V> findEntry(K key) {
         final int hash = hash(key);
 
         HashEntry<K, V> bucket = buckets[hash];
-        V something = null;
 
         if(null != bucket) {
             K otherKey = bucket.getKey();
-            something = bucket.getValue();
 
             while (! key.equals(otherKey) && bucket != null) {
                 otherKey = bucket.getKey();
-                something = bucket.getValue();
                 bucket = bucket.getNext();
-
-                if(bucket == null) {
-                    something = null;
-                }
             }
         }
-        return something;
+        return bucket;
+    }
+
+    @Override
+    public V get(K key) {
+        final HashEntry<K, V> entry = findEntry(key);
+        if(null == entry) {
+            return null;
+        } else {
+            return entry.getValue();
+        }
     }
 
     @Override
     public V put(K key, V value) {
         final int hash = hash(key);
-        final HashEntry<K, V> entry = new HashEntry(key, value);
+        final HashEntry<K, V> entry = new HashEntry<>(key, value);
 
         HashEntry<K, V> bucket = buckets[hash];
 
         if (null == bucket) {
             buckets[hash] = entry;
         } else {
-            bucket.setNext(entry);
+            bucket.append(entry);
         }
 
         return value;
     }
 
-    private int hash(K key) {
-        final String hashCodeString = String.valueOf(Math.abs((long) key.hashCode()));
-        int hash = hashCodeString.charAt(0);
+    @Override
+    public V delete(K key) {
+        final HashEntry<K, V> entry = findEntry(key);
 
-        if(hash < 0 || hash > buckets.length - 1) {
-            throw new RuntimeException(String.format("Hash code [%d] exceeds the bounds [%d] of the buckets array!", hash, buckets.length));
+        V ret = null;
+
+        if(null != entry) {
+            ret = entry.getValue();
+            if(entry.getPrevious() != null) {
+                entry.getPrevious().setNext(entry.getNext());
+            }
+            if(entry.getNext() != null) {
+                entry.getNext().setPrevious(entry.getPrevious());
+            }
+            entry.clear();
+        }
+
+        return ret;
+    }
+
+    private int hash(K key) {
+        int hash = Math.abs(key.hashCode());
+
+        if(hash < 0) {
+            throw new RuntimeException(String.format(
+                    "Hash code [%d] exceeds the bounds [%d] of the buckets array!", hash, buckets.length));
+        }
+        while(hash > buckets.length - 1) {
+            rehash();
         }
 
         return hash;
     }
 
+    private void rehash() {
+        increaseBuckets(2);
+    }
+
+    private void increaseBuckets(int factor) {
+        TABLE_SIZE *= factor;
+        HashEntry<K, V>[] oldTable = buckets;
+        buckets = new HashEntry[TABLE_SIZE];
+        System.arraycopy(oldTable, 0, buckets, 0, oldTable.length);
+    }
+
     private class HashEntry<K, V> {
-        private K key;
-        private V value;
-        private HashEntry<K, V> next;
+        private final K key;
+        private final V value;
+        private HashEntry<K, V> next, previous;
 
         HashEntry(K key, V value) {
             this.key = key;
@@ -79,7 +115,7 @@ public class MathijsHashTable<K, V> implements HashTable<K, V> {
             return value;
         }
 
-        public void setNext(HashEntry<K,V> next) {
+        public void append(HashEntry<K,V> next) {
             if(null == this.next) {
                 this.next = next;
             } else {
@@ -87,12 +123,25 @@ public class MathijsHashTable<K, V> implements HashTable<K, V> {
             }
         }
 
+        public void setNext(HashEntry<K, V> next) {
+            this.next = next;
+        }
+
         public HashEntry<K, V> getNext() {
             return next;
         }
 
-        public boolean hasNext() {
-            return null != next;
+        public HashEntry<K, V> getPrevious() {
+            return previous;
+        }
+
+        public void setPrevious(HashEntry<K, V> previous) {
+            this.previous = previous;
+        }
+
+        public void clear() {
+            this.next = null;
+            this.previous = null;
         }
     }
 }

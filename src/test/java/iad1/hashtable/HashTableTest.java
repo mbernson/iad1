@@ -2,6 +2,7 @@ package iad1.hashtable;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Hashtable;
@@ -24,6 +25,17 @@ public class HashTableTest {
 
         assertEquals("Mathijs", ht.get("naam"));
         assertEquals("software engineering", ht.get("specialisatie"));
+    }
+
+    @Test
+    @Ignore
+    public void testRemovingKeys() {
+        ht.put("naam", "mathijs");
+        ht.put("specialisatie", "software engineering");
+
+        String val = ht.delete("naam");
+        assertEquals("mathijs", val);
+        assertNull(ht.get("naam"));
     }
 
     class BadObject<T> {
