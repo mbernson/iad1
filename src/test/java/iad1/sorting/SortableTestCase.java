@@ -8,8 +8,6 @@ import static org.junit.Assert.assertArrayEquals;
 public abstract class SortableTestCase {
     protected Sorter sorter;
 
-    public abstract void setUp() throws Exception;
-
     @Test
     public void testSortingIntegerArrays() {
         Integer[] items =  { 3, 4, 2, 1, 5 },
