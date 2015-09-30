@@ -13,25 +13,33 @@ public class ConcensusImpl implements Concensus {
         if(voters == null || voters.isEmpty())
             throw new RuntimeException("Empty voters list!");
 
-        boolean result = true;
+        boolean everybodyReturnedTrue = true;
 
         for(Voter voter : voters) {
-            if(voter == null) {
-                continue;
+            if(isAllowedToVote(voter)) {
+                if (false == voter.vote()) {
+                    everybodyReturnedTrue = false;
+                }
+                thingsThatHaveVoted.add(voter.hashCode());
             }
-            if(thingsThatHaveVoted.contains(voter.hashCode())) {
-                continue;
-            }
-            if(false == voter.vote()) {
-                result = false;
-            }
-            thingsThatHaveVoted.add(voter.hashCode());
         }
 
         if(thingsThatHaveVoted.isEmpty()) {
             throw new RuntimeException("Nobody voted!");
         }
 
-        return result;
+        return everybodyReturnedTrue;
+    }
+
+    private boolean isAllowedToVote(Voter voter) {
+        if(voter == null) {
+            return false;
+        }
+
+        if(thingsThatHaveVoted.contains(voter.hashCode())) {
+            return false;
+        }
+
+        return true;
     }
 }
