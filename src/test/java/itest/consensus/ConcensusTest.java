@@ -59,7 +59,7 @@ public class ConcensusTest {
      * Specificatie 4: Iedere valide stemmer (dat wil zeggen, iedere niet null stemmer) moet stemmen.
      */
     @Test
-    public void testConcencusIgnoresNullVoters() {
+    public void testConcencusLetsEveryVoterVoteAndIgnoresNullVoters() {
         Voter voterMock = mock(Voter.class);
 
         voters.add(new TrueVoter());
@@ -70,13 +70,13 @@ public class ConcensusTest {
 
         assertFalse(consensus.voting(voters));
 
-        verify(voterMock).vote();
+        verify(voterMock, times(1)).vote();
     }
 
     /**
      * Specificatie 5: Geen stemgerechtigde mag vaker dan 1 keer stemmen.
      *
-     * TODO: What is the same Voter object appears in the list multiple times?
+     * TODO: What if the same Voter object appears in the list multiple times?
      */
     @Test
     public void testVoteIsCalledExactlyOnce() {
@@ -84,15 +84,15 @@ public class ConcensusTest {
               voterMockTrue = mock(Voter.class);
 
         when(voterMockFalse.vote()).thenReturn(false);
-        when(voterMockTrue.vote()).thenReturn(false);
+        when(voterMockTrue.vote()).thenReturn(true);
 
         voters.add(voterMockFalse);
         voters.add(voterMockTrue);
 
         consensus.voting(voters);
 
-        verify(voterMockFalse).vote();
-        verify(voterMockTrue).vote();
+        verify(voterMockFalse, times(1)).vote();
+        verify(voterMockTrue, times(1)).vote();
     }
 
     @After
