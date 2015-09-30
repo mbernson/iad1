@@ -4,7 +4,7 @@ public class MathijsHashTable<K, V> implements HashTable<K, V> {
 
     private HashEntry<K, V>[] buckets;
 
-    private int TABLE_SIZE = 64;
+    private int TABLE_SIZE = 100;
 
     public MathijsHashTable() {
         buckets = new HashEntry[TABLE_SIZE];
@@ -73,7 +73,8 @@ public class MathijsHashTable<K, V> implements HashTable<K, V> {
     }
 
     private int hash(K key) {
-        int hash = Math.abs(key.hashCode());
+        int hashCode = Math.abs(key.hashCode());
+        int hash = Integer.parseInt((""+hashCode).substring(0, 2));
 
         if(hash < 0) {
             throw new RuntimeException(String.format(
@@ -91,7 +92,7 @@ public class MathijsHashTable<K, V> implements HashTable<K, V> {
     }
 
     private void increaseBuckets(int factor) {
-        TABLE_SIZE *= factor;
+        TABLE_SIZE = factor;
         HashEntry<K, V>[] oldTable = buckets;
         buckets = new HashEntry[TABLE_SIZE];
         System.arraycopy(oldTable, 0, buckets, 0, oldTable.length);
