@@ -15,7 +15,7 @@ apply plugin: 'pmd'
 
 sourceCompatibility = '1.8'
 
-mainClassName = 'iad1.Main'
+mainClassName = 'iad1.graphs.Main'
 
 [ compileJava, compileTestJava ]*.options*.encoding = 'UTF-8'
 
