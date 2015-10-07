@@ -14,38 +14,38 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class ConcensusTest {
-    private Concensus consensus;
-    private ArrayList<Voter> voters;
+private Concensus consensus;
+private ArrayList<Voter> voters;
 
-    @Before
-    public void setUp() throws Exception {
-        voters = new ArrayList<>();
-        consensus = new ConcensusImpl();
-    }
+@Before
+public void setUp() throws Exception {
+    voters = new ArrayList<>();
+    consensus = new ConcensusImpl();
+}
 
-    /**
-     * Specificatie 1: De returnvalue van voting is alleen false als minimaal één stemmer als stem false geeft.
-     */
-    @Test
-    public void testVotingReturnsFalseWhenOneVoterVotesFalse() {
-        voters.add(new TrueVoter());
-        voters.add(new FalseVoter());
-        voters.add(new RandomVoter());
+/**
+ * Specificatie 1: De returnvalue van voting is alleen false als minimaal één stemmer als stem false geeft.
+ */
+@Test
+public void testVotingReturnsFalseWhenOneVoterVotesFalse() {
+    voters.add(new TrueVoter());
+    voters.add(new FalseVoter());
+    voters.add(new RandomVoter());
 
-        assertFalse(consensus.voting(voters));
-    }
+    assertFalse(consensus.voting(voters));
+}
 
-    /**
-     * Specificatie 2: Als alle stemgerechtigden true stemmen dan moet de returnvalue van voting() true zijn.
-     */
-    @Test
-    public void testVotingReturnsTrueWhenAllVotersVoteTrue() {
-        voters.add(new TrueVoter());
-        voters.add(new TrueVoter());
-        voters.add(new TrueVoter());
+/**
+ * Specificatie 2: Als alle stemgerechtigden true stemmen dan moet de returnvalue van voting() true zijn.
+ */
+@Test
+public void testVotingReturnsTrueWhenAllVotersVoteTrue() {
+    voters.add(new TrueVoter());
+    voters.add(new TrueVoter());
+    voters.add(new TrueVoter());
 
-        assertTrue(consensus.voting(voters));
-    }
+    assertTrue(consensus.voting(voters));
+}
 
     /**
      * Specificatie 3: Als specificatie 1 en 2 zich niet voordoen moet er een exception worden opgeworpen.
@@ -73,31 +73,48 @@ public class ConcensusTest {
         verify(voterMock, times(1)).vote();
     }
 
-    /**
-     * Specificatie 5: Geen stemgerechtigde mag vaker dan 1 keer stemmen.
-     *
-     * TODO: What if the same Voter object appears in the list multiple times?
-     */
-    @Test
-    public void testVoteIsCalledExactlyOnce() {
-        Voter voterMockFalse = mock(Voter.class),
-              voterMockTrue = mock(Voter.class);
+/**
+ * Specificatie 5: Geen stemgerechtigde mag vaker dan 1 keer stemmen.
+ */
+@Test
+public void testVoteIsCalledExactlyOnceOnVoters() {
+    Voter voterMockFalse = mock(Voter.class),
+          voterMockTrue = mock(Voter.class);
 
-        when(voterMockFalse.vote()).thenReturn(false);
-        when(voterMockTrue.vote()).thenReturn(true);
+    when(voterMockFalse.vote()).thenReturn(false);
+    when(voterMockTrue.vote()).thenReturn(true);
 
-        voters.add(voterMockFalse);
-        voters.add(voterMockTrue);
+    voters.add(voterMockFalse);
+    voters.add(voterMockTrue);
 
-        consensus.voting(voters);
+    consensus.voting(voters);
 
-        verify(voterMockFalse, times(1)).vote();
-        verify(voterMockTrue, times(1)).vote();
-    }
+    verify(voterMockFalse, times(1)).vote();
+    verify(voterMockTrue, times(1)).vote();
+}
 
-    @After
-    public void tearDown() throws Exception {
-        voters = null;
-        consensus = null;
-    }
+@Test
+public void testVoteIsCalledExactlyOnceForEqualObjects() {
+    Voter voterMockFalse = mock(Voter.class),
+            voterMockTrue = mock(Voter.class);
+
+    when(voterMockFalse.vote()).thenReturn(false);
+    when(voterMockTrue.vote()).thenReturn(true);
+
+    voters.add(voterMockFalse);
+    voters.add(voterMockTrue);
+    voters.add(voterMockFalse);
+    voters.add(voterMockTrue);
+
+    consensus.voting(voters);
+
+    verify(voterMockFalse, times(1)).vote();
+    verify(voterMockTrue, times(1)).vote();
+}
+
+@After
+public void tearDown() throws Exception {
+    voters = null;
+    consensus = null;
+}
 }

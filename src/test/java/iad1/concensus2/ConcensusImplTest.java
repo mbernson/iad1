@@ -4,6 +4,7 @@ import iad1.concensus2.voters.FalseVoter;
 import iad1.concensus2.voters.TrueVoter;
 import itest.consensus.Concensus;
 import itest.consensus.Voter;
+import itest.consensus.impl.SimpleConcensus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +20,7 @@ public class ConcensusImplTest {
 
     @Before
     public void setUp() throws Exception {
-        concensus = new ConcensusImpl();
+        concensus = new SimpleConcensus();
         voters = new ArrayList<>();
     }
 
@@ -40,61 +41,61 @@ public class ConcensusImplTest {
         assertFalse(result);
     }
 
-    /**
-     * Specificatie 2
-     * Als alle stemgerechtigden true stemmen dan moet de returnvalue van voting true zijn.
-     */
-    @Test
-    public void testVotingReturnsTrueWhenAllVotersReturnTrue() {
-        voters.add(new TrueVoter());
-        voters.add(new TrueVoter());
-        voters.add(new TrueVoter());
+/**
+ * Specificatie 2
+ * Als alle stemgerechtigden true stemmen dan moet de returnvalue van voting true zijn.
+ */
+@Test
+public void testVotingReturnsTrueWhenAllVotersReturnTrue() {
+    voters.add(new TrueVoter());
+    voters.add(new TrueVoter());
+    voters.add(new TrueVoter());
 
-        boolean result = concensus.voting(voters);
+    boolean result = concensus.voting(voters);
 
-        assertTrue(result);
-    }
+    assertTrue(result);
+}
 
-    /**
-     * Specificatie 3
-     * Als specificatie 1 en 2 zich niet voordoen moet er een exception worden opgeworpen.
-     */
-    @Test(expected = Exception.class)
-    public void testExceptionIsThrownWhenNobodyVotes() {
-        concensus.voting(voters);
-    }
+/**
+ * Specificatie 3
+ * Als specificatie 1 en 2 zich niet voordoen moet er een exception worden opgeworpen.
+ */
+@Test(expected = Exception.class)
+public void testExceptionIsThrownWhenNobodyVotes() {
+    concensus.voting(voters);
+}
 
-    @Test(expected = Exception.class)
-    public void testExceptionIsThrownWhenAllVotersAreNull() {
-        voters.add(null);
-        voters.add(null);
-        voters.add(null);
-        voters.add(null);
+@Test(expected = Exception.class)
+public void testExceptionIsThrownWhenAllVotersAreNull() {
+    voters.add(null);
+    voters.add(null);
+    voters.add(null);
+    voters.add(null);
 
-        concensus.voting(voters);
-    }
+    concensus.voting(voters);
+}
 
-    /**
-     * Specificatie 4
-     * Iedere valide stemmer (dat wil zeggen, iedere niet null stemmer) moet stemmen.
-     */
-    @Test
-    public void everyValidVoterMustVote() {
-        Voter voterMock = mock(Voter.class);
-        when(voterMock.vote()).thenReturn(false);
+/**
+ * Specificatie 4
+ * Iedere valide stemmer (dat wil zeggen, iedere niet null stemmer) moet stemmen.
+ */
+@Test
+public void everyValidVoterMustVote() {
+    Voter voterMock = mock(Voter.class);
+    when(voterMock.vote()).thenReturn(false);
 
-        voters.add(null);
-        voters.add(new TrueVoter());
-        voters.add(null);
-        voters.add(new FalseVoter());
-        voters.add(null);
-        voters.add(voterMock);
-        voters.add(null);
+    voters.add(null);
+    voters.add(new TrueVoter());
+    voters.add(null);
+    voters.add(new FalseVoter());
+    voters.add(null);
+    voters.add(voterMock);
+    voters.add(null);
 
-        concensus.voting(voters);
+    concensus.voting(voters);
 
-        verify(voterMock, times(1)).vote();
-    }
+    verify(voterMock, times(1)).vote();
+}
 
     /**
      * Specificatie 5
