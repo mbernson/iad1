@@ -32,11 +32,7 @@ public class ConcensusImpl implements Concensus {
     }
 
     private boolean isAllowedToVote(Voter voter) {
-        if(voter == null) {
-            return false;
-        }
-
-        if(thingsThatHaveVoted.contains(voter.hashCode())) {
+        if(voter == null || thingsThatHaveVoted.contains(voter.hashCode())) {
             return false;
         }
 
