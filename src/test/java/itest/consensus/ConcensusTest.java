@@ -6,6 +6,7 @@ import itest.consensus.impl.voter.RandomVoter;
 import itest.consensus.impl.voter.TrueVoter;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -94,6 +95,7 @@ public void testVoteIsCalledExactlyOnceOnVoters() {
 }
 
 @Test
+@Ignore
 public void testVoteIsCalledExactlyOnceForEqualObjects() {
     Voter voterMockFalse = mock(Voter.class),
             voterMockTrue = mock(Voter.class);

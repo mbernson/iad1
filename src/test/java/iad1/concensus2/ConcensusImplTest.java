@@ -20,7 +20,7 @@ public class ConcensusImplTest {
 
     @Before
     public void setUp() throws Exception {
-        concensus = new SimpleConcensus();
+        concensus = new ConcensusImpl();
         voters = new ArrayList<>();
     }
 
